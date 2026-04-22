@@ -21,7 +21,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  /* ── Header ── */
   header {
     padding: 20px 36px;
     border-bottom: 1px solid var(--border);
@@ -43,7 +42,6 @@
   }
   select:focus, .search-wrap input:focus { border-color: var(--accent); }
 
-  /* BD filter buttons */
   .bd-filters { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
   .bd-btn {
     font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500;
@@ -59,11 +57,9 @@
   .search-icon { position:absolute; left:9px; top:50%; transform:translateY(-50%); opacity:.35; font-size:13px; pointer-events:none; }
   .count-badge { font-size:12px; color:var(--muted); white-space:nowrap; padding: 0 4px; }
 
-  /* ── Grid ── */
   .grid-wrap { padding: 28px 36px; }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:18px; }
 
-  /* ── Card ── */
   .card {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 18px; overflow:hidden; cursor:pointer;
@@ -84,7 +80,6 @@
 
   .card-body { padding:14px 15px 15px; }
 
-  /* Company — big & prominent */
   .card-company-big {
     font-family:'Syne',sans-serif;
     font-size:13px; font-weight:700;
@@ -94,29 +89,43 @@
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
 
-  .card-name { font-family:'Syne',sans-serif; font-weight:700; font-size:15px; color:#fff; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .card-role { font-size:11.5px; color:var(--muted); margin-bottom:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-  /* BD / ISR row */
-  .card-owners {
-    display:flex; gap:6px; margin-bottom:9px; flex-wrap:wrap;
+  .card-name {
+    font-family:'Syne',sans-serif; font-weight:700; font-size:15px;
+    color:#fff; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .owner-badge {
-    font-size:10.5px; font-weight:500;
-    padding: 3px 8px; border-radius:5px;
-    display:flex; align-items:center; gap:4px;
+  .card-role {
+    font-size:11.5px; color:var(--muted); margin-bottom:8px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .owner-badge.bd  { background:rgba(79,124,255,.15); color:#93b4ff; border:1px solid rgba(79,124,255,.25); }
-  .owner-badge.isr { background:rgba(167,139,250,.12); color:#c4b5fd; border:1px solid rgba(167,139,250,.22); }
-  .owner-label { font-size:9px; opacity:.7; text-transform:uppercase; letter-spacing:.05em; }
 
-  .card-stats { display:flex; gap:5px; flex-wrap:wrap; }
-  .stat-pill { font-size:10.5px; color:var(--muted); background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:5px; padding:2px 7px; white-space:nowrap; }
-  .stat-pill.green { color:#34d399; border-color:rgba(52,211,153,.2); background:rgba(52,211,153,.07); }
-  .stat-pill.blue  { color:var(--tag-color); border-color:rgba(79,124,255,.2); background:rgba(79,124,255,.07); }
-  .stat-pill.pipe  { border-color:currentColor; opacity:.85; }
+  .card-stats {
+    display:flex; gap:6px; flex-wrap:wrap;
+    align-items:center;
+  }
+  .stat-pill {
+    font-size:10.5px; color:var(--muted);
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--border);
+    border-radius:6px; padding:3px 8px; white-space:nowrap;
+  }
+  .stat-pill.green {
+    color:#34d399;
+    border-color:rgba(52,211,153,.2);
+    background:rgba(52,211,153,.07);
+    font-weight:600;
+  }
+  .stat-pill.blue  {
+    color:#bcd0ff;
+    border-color:rgba(79,124,255,.32);
+    background:rgba(79,124,255,.14);
+    font-weight:700;
+  }
+  .stat-pill.app-pill {
+    font-size:11.5px;
+    padding:4px 9px;
+  }
+  .stat-pill.pipe  { border-color:currentColor; opacity:.9; font-weight:600; }
 
-  /* ── Modal ── */
   .overlay {
     display:none; position:fixed; inset:0;
     background:rgba(0,0,0,.78); backdrop-filter:blur(8px);
@@ -171,6 +180,14 @@
 
   .empty { text-align:center; padding:80px 20px; color:var(--muted); font-size:14px; }
   .empty-icon { font-size:44px; margin-bottom:14px; }
+
+  @media (max-width: 640px) {
+    header { padding:16px 18px; }
+    .grid-wrap { padding:20px 18px; }
+    .controls { justify-content:flex-start; }
+    .search-wrap input { width:160px; }
+    .fields-grid { grid-template-columns:1fr; }
+  }
 </style>
 </head>
 <body>
@@ -182,7 +199,6 @@
       <option value="">— Select Folder —</option>
     </select>
 
-    <!-- BD filter pills -->
     <div class="bd-filters" id="bdFilters"></div>
 
     <div class="search-wrap">
@@ -199,7 +215,6 @@
   </div>
 </div>
 
-<!-- Modal -->
 <div class="overlay" id="overlay" onclick="overlayClick(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -223,7 +238,7 @@
       <div class="fields-grid">
         <div class="field"><label>App Name</label><span id="mAppName">—</span></div>
         <div class="field"><label>MMP</label><span id="mMMP">—</span></div>
-        <div class="field"><label>Daily Downloads</label><span class="big-val" id="mDL">—</span></div>
+        <div class="field"><label>DL</label><span class="big-val" id="mDL">—</span></div>
         <div class="field"><label>DAU</label><span class="big-val" id="mDAU">—</span></div>
       </div>
     </div>
@@ -251,9 +266,9 @@ const PIPE_COLORS = { 1:"#f87171", 2:"#fbbf24", 3:"#60a5fa", 4:"#a78bfa", 5:"#34
 
 function parsePipeline(val) {
   if (!val) return null;
-  const num = parseInt(val.trim().split("/")[0]);
+  const num = parseInt(String(val).trim().split("/")[0]);
   const pct = isNaN(num) ? 0 : Math.min(num / 5 * 100, 100);
-  return { pct, label: val.trim(), color: PIPE_COLORS[num] || "#6b7280" };
+  return { pct, label: String(val).trim(), color: PIPE_COLORS[num] || "#6b7280" };
 }
 
 function fmtNum(v) {
@@ -261,73 +276,93 @@ function fmtNum(v) {
   const n = parseFloat(String(v).replace(/,/g,""));
   if (isNaN(n)) return v;
   if (n >= 1000000) return (n/1000000).toFixed(1)+"M";
-  if (n >= 1000)    return (n/1000).toFixed(1)+"K";
+  if (n >= 1000) return (n/1000).toFixed(1)+"K";
   return n.toLocaleString();
 }
 
-function initials(c) { return (c.first_name?.[0]||"")+(c.last_name?.[0]||""); }
+function initials(c) {
+  return (c.first_name?.[0] || "") + (c.last_name?.[0] || "");
+}
 
-// ── Build BD filter pills ──────────────────────────────────────────────────
 function buildBDFilters(cards) {
-  const bds = ["All", ...new Set(cards.map(c => c.bd).filter(Boolean)).values()].sort((a,b) => a==="All"?-1:a.localeCompare(b));
+  const bds = ["All", ...new Set(cards.map(c => c.bd).filter(Boolean)).values()]
+    .sort((a,b) => a === "All" ? -1 : a.localeCompare(b));
+
   const wrap = document.getElementById("bdFilters");
   wrap.innerHTML = "";
+
   bds.forEach(bd => {
     const btn = document.createElement("button");
     btn.className = "bd-btn" + (bd === activeBD ? " active" : "");
     btn.textContent = bd;
-    btn.onclick = () => { activeBD = bd; document.querySelectorAll(".bd-btn").forEach(b => b.classList.toggle("active", b.textContent===bd)); applyFilters(); };
+    btn.onclick = () => {
+      activeBD = bd;
+      document.querySelectorAll(".bd-btn").forEach(b => b.classList.toggle("active", b.textContent === bd));
+      applyFilters();
+    };
     wrap.appendChild(btn);
   });
 }
 
-// ── Load ──────────────────────────────────────────────────────────────────
 async function loadFolders() {
-  const folders = await fetch("/get_folders").then(r=>r.json());
+  const folders = await fetch("/get_folders").then(r => r.json());
   const sel = document.getElementById("folderSelect");
-  folders.forEach(f => { const o=document.createElement("option"); o.value=o.textContent=f; sel.appendChild(o); });
-  if (folders.length) { sel.value=folders[0]; loadImages(); }
+  folders.forEach(f => {
+    const o = document.createElement("option");
+    o.value = o.textContent = f;
+    sel.appendChild(o);
+  });
+  if (folders.length) {
+    sel.value = folders[0];
+    loadImages();
+  }
 }
 
 async function loadImages() {
   const folder = document.getElementById("folderSelect").value;
   if (!folder) return;
-  allCards = await fetch(`/get_images?folder=${encodeURIComponent(folder)}`).then(r=>r.json());
+  allCards = await fetch(`/get_images?folder=${encodeURIComponent(folder)}`).then(r => r.json());
   activeBD = "All";
   buildBDFilters(allCards);
   applyFilters();
 }
 
-// ── Filter ────────────────────────────────────────────────────────────────
 function applyFilters() {
   const q = document.getElementById("searchInput").value.toLowerCase();
   let filtered = allCards;
-  if (activeBD !== "All") filtered = filtered.filter(c => c.bd === activeBD);
-  if (q) filtered = filtered.filter(c =>
-    `${c.name} ${c.company} ${c.role} ${c.app_name} ${c.mmp} ${c.bd} ${c.isr}`.toLowerCase().includes(q)
-  );
+
+  if (activeBD !== "All") {
+    filtered = filtered.filter(c => c.bd === activeBD);
+  }
+
+  if (q) {
+    filtered = filtered.filter(c =>
+      `${c.name} ${c.company} ${c.role} ${c.app_name} ${c.mmp} ${c.bd} ${c.isr}`.toLowerCase().includes(q)
+    );
+  }
+
   renderCards(filtered);
 }
 
-// ── Render ────────────────────────────────────────────────────────────────
 function renderCards(cards) {
   const grid = document.getElementById("grid");
   document.getElementById("countBadge").textContent = `${cards.length} people`;
 
   if (!cards.length) {
-    grid.innerHTML=`<div class="empty"><div class="empty-icon">🔍</div>No contacts found</div>`;
+    grid.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div>No contacts found</div>`;
     return;
   }
 
   grid.innerHTML = "";
+
   cards.forEach((c, i) => {
     const div = document.createElement("div");
     div.className = "card";
-    div.style.animationDelay = `${Math.min(i*20,240)}ms`;
+    div.style.animationDelay = `${Math.min(i * 20, 240)}ms`;
     div.onclick = () => openModal(c);
 
     const pipe = parsePipeline(c.pipeline);
-    const ini  = initials(c);
+    const ini = initials(c);
 
     div.innerHTML = `
       <div class="card-photo-wrap">
@@ -336,64 +371,76 @@ function renderCards(cards) {
              alt="${c.name}">
       </div>
       <div class="card-body">
-        ${c.company?`<div class="card-company-big">${c.company}</div>`:""}
+        ${c.company ? `<div class="card-company-big">${c.company}</div>` : ""}
         <div class="card-name">${c.name}</div>
-        <div class="card-role">${c.role||"—"}</div>
-        <div class="card-owners">
-          ${c.bd  ? `<span class="owner-badge bd"><span class="owner-label">BD</span>${c.bd}</span>`  : ""}
-          ${c.isr ? `<span class="owner-badge isr"><span class="owner-label">ISR</span>${c.isr}</span>` : ""}
-        </div>
+        <div class="card-role">${c.role || "—"}</div>
         <div class="card-stats">
-          ${pipe?`<span class="stat-pill pipe" style="color:${pipe.color}">${pipe.label}</span>`:""}
-          ${c.app_name?`<span class="stat-pill blue">${c.app_name}</span>`:""}
-          ${c.mmp?`<span class="stat-pill">${c.mmp}</span>`:""}
-          ${c.daily_dl?`<span class="stat-pill green">↓ ${fmtNum(c.daily_dl)}</span>`:""}
-          ${c.dau?`<span class="stat-pill">DAU ${fmtNum(c.dau)}</span>`:""}
+          ${pipe ? `<span class="stat-pill pipe" style="color:${pipe.color}">${pipe.label}</span>` : ""}
+          ${c.app_name ? `<span class="stat-pill blue app-pill">${c.app_name}</span>` : ""}
+          ${c.mmp ? `<span class="stat-pill">${c.mmp}</span>` : ""}
+          ${c.daily_dl ? `<span class="stat-pill green">DL ${fmtNum(c.daily_dl)}</span>` : ""}
+          ${c.dau ? `<span class="stat-pill">DAU ${fmtNum(c.dau)}</span>` : ""}
         </div>
       </div>`;
     grid.appendChild(div);
   });
 }
 
-// ── Modal ─────────────────────────────────────────────────────────────────
 function openModal(c) {
   const ini = initials(c);
   document.getElementById("mAvatar").innerHTML =
     `<img class="modal-avatar" src="${c.img_src}"
           onerror="this.outerHTML='<div class=\\'modal-avatar-init\\'>${ini}</div>'"
           alt="${c.name}">`;
+
   document.getElementById("mCompany").textContent = c.company || "";
-  document.getElementById("mName").textContent    = c.name;
-  document.getElementById("mRole").textContent    = c.role || "";
+  document.getElementById("mName").textContent = c.name;
+  document.getElementById("mRole").textContent = c.role || "";
 
   const pipe = parsePipeline(c.pipeline);
-  const ps   = document.getElementById("mPipelineSection");
+  const ps = document.getElementById("mPipelineSection");
   if (pipe) {
-    ps.style.display="";
+    ps.style.display = "";
     const bar = document.getElementById("mPipelineBar");
-    bar.style.width="0%"; bar.style.background=pipe.color;
-    setTimeout(()=>bar.style.width=pipe.pct+"%", 50);
+    bar.style.width = "0%";
+    bar.style.background = pipe.color;
+    setTimeout(() => bar.style.width = pipe.pct + "%", 50);
     document.getElementById("mPipelineLabel").textContent = pipe.label;
-  } else { ps.style.display="none"; }
+  } else {
+    ps.style.display = "none";
+  }
 
-  document.getElementById("mAppName").textContent = c.app_name||"—";
-  document.getElementById("mMMP").textContent     = c.mmp||"—";
-  document.getElementById("mDL").textContent      = fmtNum(c.daily_dl);
-  document.getElementById("mDAU").textContent     = fmtNum(c.dau);
-  document.getElementById("mBD").textContent      = c.bd||"—";
-  document.getElementById("mISR").textContent     = c.isr||"—";
+  document.getElementById("mAppName").textContent = c.app_name || "—";
+  document.getElementById("mMMP").textContent = c.mmp || "—";
+  document.getElementById("mDL").textContent = fmtNum(c.daily_dl);
+  document.getElementById("mDAU").textContent = fmtNum(c.dau);
+  document.getElementById("mBD").textContent = c.bd || "—";
+  document.getElementById("mISR").textContent = c.isr || "—";
 
   const ls = document.getElementById("mLiSection");
   const la = document.getElementById("mLinkedIn");
-  if (c.linkedin) { ls.style.display=""; la.href=la.textContent=c.linkedin; }
-  else { ls.style.display="none"; }
+  if (c.linkedin) {
+    ls.style.display = "";
+    la.href = c.linkedin;
+    la.textContent = c.linkedin;
+  } else {
+    ls.style.display = "none";
+  }
 
   document.getElementById("overlay").classList.add("open");
 }
 
-function closeModal() { document.getElementById("overlay").classList.remove("open"); }
-function overlayClick(e) { if(e.target===document.getElementById("overlay")) closeModal(); }
-document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeModal(); });
+function closeModal() {
+  document.getElementById("overlay").classList.remove("open");
+}
+
+function overlayClick(e) {
+  if (e.target === document.getElementById("overlay")) closeModal();
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeModal();
+});
 
 loadFolders();
 </script>
