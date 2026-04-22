@@ -102,24 +102,27 @@ def get_images():
     for fname in sorted(os.listdir(folder_path)):
         if not fname.endswith((".jpg", ".png")):
             continue
-        info = people_data.get(fname, {})
-        clean_name = fname.replace(".png", "").replace(".jpg", "").replace("_", " ")
+
+        info = people_data.get(fname)
+        if not info:
+            continue
+
         result.append({
-            "file":       fname,
-            "name":       info.get("name",       clean_name),
-            "first_name": info.get("first_name", clean_name.split(" ")[0]),
-            "last_name":  info.get("last_name",  ""),
-            "company":    info.get("company",    ""),
-            "role":       info.get("role",       ""),
-            "pipeline":   info.get("pipeline",   ""),
-            "bd":         info.get("bd",         ""),
-            "isr":        info.get("isr",        ""),
-            "linkedin":   info.get("linkedin",   ""),
-            "app_name":   info.get("app_name",   ""),
-            "mmp":        info.get("mmp",        ""),
-            "daily_dl":   info.get("daily_dl",   ""),
-            "dau":        info.get("dau",        ""),
-            "img_src":    f"/{folder}/{fname}",
+            "file": fname,
+            "name": info.get("name", ""),
+            "first_name": info.get("first_name", ""),
+            "last_name": info.get("last_name", ""),
+            "company": info.get("company", ""),
+            "role": info.get("role", ""),
+            "pipeline": info.get("pipeline", ""),
+            "bd": info.get("bd", ""),
+            "isr": info.get("isr", ""),
+            "linkedin": info.get("linkedin", ""),
+            "app_name": info.get("app_name", ""),
+            "mmp": info.get("mmp", ""),
+            "daily_dl": info.get("daily_dl", ""),
+            "dau": info.get("dau", ""),
+            "img_src": f"/{folder}/{fname}",
         })
     return jsonify(result)
 
