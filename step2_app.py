@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, send_file, send_from_directory
+from from flask import Flask, jsonify, request, render_template, send_file, send_from_directory
 import os, csv
 
 app = Flask(__name__)
@@ -47,7 +47,7 @@ load_people_data()
 
 @app.route("/")
 def index():
-    return send_file("index.html")
+    return render_template("index.html")
 
 @app.route("/get_folders")
 def get_folders():
