@@ -12,40 +12,66 @@ def name_to_key(full_name, ext=".png"):
     return full_name.strip().replace(" ", "_") + ext
 
 def load_people_data():
+
     global people_data
+
     people_data = {}
+
     if not os.path.exists(DATA_FILE):
+
         print(f"[WARNING] 找不到 {DATA_FILE}")
+
         return
 
     with open(DATA_FILE, newline="", encoding="utf-8-sig") as f:
+
         for row in csv.DictReader(f):
-            first_name = row.get("First name", "").strip()
-            last_name = row.get("Last name", "").strip()
+
+            first_name = row.get("First name ", "").strip()
+
+            last_name = row.get("Last Name", "").strip()
+
             name = f"{first_name} {last_name}".strip()
 
             if not name:
+
                 continue
 
             for ext in (".png", ".jpg"):
+
                 key = name_to_key(name, ext)
+
                 people_data[key] = {
+
                     "name": name,
+
                     "first_name": first_name,
+
                     "last_name": last_name,
-                    "company": row.get("Company", ""),
-                    "role": row.get("Job Title", ""),
-                    "pipeline": row.get("Qualification", ""),
-                    "bd": row.get("BD", ""),
-                    "isr": row.get("ISR", ""),
-                    "linkedin": row.get("LinkedIn", ""),
-                    "app_name": row.get("Apps", ""),
+
+                    "company": row.get("Company Name", ""),
+
+                    "role": row.get("Role", ""),
+
+                    "pipeline": row.get("Sale's pipeline progress", ""),
+
+                    "bd": row.get("BD in charge", ""),
+
+                    "isr": row.get("ISR in charge", ""),
+
+                    "linkedin": row.get("Linkedin", ""),
+
+                    "app_name": row.get("App name", ""),
+
                     "mmp": row.get("MMP", ""),
+
                     "daily_dl": row.get("Daily downloads", ""),
+
                     "dau": row.get("DAU", ""),
+
                 }
 
-    print(f"[INFO] 載入 {len(people_data) // 2} 筆")
+    print(f"[INFO] 載入 {len(people_data)//2} 筆")
 
 load_people_data()
 
