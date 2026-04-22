@@ -92,6 +92,7 @@ def get_folders():
     return jsonify(folders)
 
 @app.route("/get_images")
+@app.route("/get_images")
 def get_images():
     folder = request.args.get("folder", "")
     folder_path = os.path.join(IMAGE_ROOT, folder)
@@ -99,12 +100,15 @@ def get_images():
         return jsonify([])
 
     result = []
+    skipped = []
+
     for fname in sorted(os.listdir(folder_path)):
-        if not fname.endswith((".jpg", ".png")):
+        if not fname.lower().endswith((".jpg", ".png")):
             continue
 
         info = people_data.get(fname)
-        if not info:
+        if info is None:
+            skipped.append(fname)
             continue
 
         result.append({
@@ -124,6 +128,11 @@ def get_images():
             "dau": info.get("dau", ""),
             "img_src": f"/{folder}/{fname}",
         })
+
+    print(f"[INFO] folder={folder} matched={len(result)} skipped={len(skipped)}")
+    if skipped:
+        print("[INFO] skipped files:", skipped[:20])
+
     return jsonify(result)
 
 @app.route("/<path:path>")
