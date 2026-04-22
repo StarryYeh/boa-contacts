@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOA Contact Gallery</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f13;
+    --surface: #16181f;
+    --card: #1c1f2a;
+    --card-hover: #222536;
+    --border: rgba(255,255,255,0.07);
+    --accent: #4f7cff;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --tag-bg: rgba(79,124,255,0.12);
+    --tag-color: #93b4ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ── Header ── */
+  header {
+    padding: 20px 36px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(14,15,19,0.95); backdrop-filter: blur(12px);
+  }
+  .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; color:#fff; letter-spacing:-0.5px; flex-shrink:0; }
+  .logo span { color: var(--accent); }
+
+  .controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; flex:1; justify-content:flex-end; }
+
+  select, .search-wrap input {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); padding: 8px 12px; border-radius: 9px;
+    font-family:'DM Sans',sans-serif; font-size:13px; outline:none;
+    transition: border-color .2s; cursor:pointer;
+  }
+  select:focus, .search-wrap input:focus { border-color: var(--accent); }
+
+  /* BD filter buttons */
+  .bd-filters { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  .bd-btn {
+    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500;
+    padding: 6px 13px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted); cursor:pointer;
+    transition: all .15s; white-space:nowrap;
+  }
+  .bd-btn:hover { border-color: var(--accent); color: var(--text); }
+  .bd-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight:600; }
+
+  .search-wrap { position:relative; }
+  .search-wrap input { width:200px; padding-left:30px; }
+  .search-icon { position:absolute; left:9px; top:50%; transform:translateY(-50%); opacity:.35; font-size:13px; pointer-events:none; }
+  .count-badge { font-size:12px; color:var(--muted); white-space:nowrap; padding: 0 4px; }
+
+  /* ── Grid ── */
+  .grid-wrap { padding: 28px 36px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:18px; }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 18px; overflow:hidden; cursor:pointer;
+    transition: transform .2s, background .2s, box-shadow .2s;
+    animation: fadeUp .3s ease both;
+  }
+  .card:hover { transform:translateY(-4px); background:var(--card-hover); box-shadow:0 14px 40px rgba(0,0,0,.5); }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  .card-photo-wrap { width:100%; aspect-ratio:1; overflow:hidden; background:var(--surface); }
+  .card-photo { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s; }
+  .card:hover .card-photo { transform:scale(1.04); }
+  .card-initials {
+    width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+    font-family:'Syne',sans-serif; font-size:48px; font-weight:800; color:var(--accent);
+    background:linear-gradient(135deg,#1a1d2e,#0e1020);
+  }
+
+  .card-body { padding:14px 15px 15px; }
+
+  /* Company — big & prominent */
+  .card-company-big {
+    font-family:'Syne',sans-serif;
+    font-size:13px; font-weight:700;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+
+  .card-name { font-family:'Syne',sans-serif; font-weight:700; font-size:15px; color:#fff; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .card-role { font-size:11.5px; color:var(--muted); margin-bottom:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  /* BD / ISR row */
+  .card-owners {
+    display:flex; gap:6px; margin-bottom:9px; flex-wrap:wrap;
+  }
+  .owner-badge {
+    font-size:10.5px; font-weight:500;
+    padding: 3px 8px; border-radius:5px;
+    display:flex; align-items:center; gap:4px;
+  }
+  .owner-badge.bd  { background:rgba(79,124,255,.15); color:#93b4ff; border:1px solid rgba(79,124,255,.25); }
+  .owner-badge.isr { background:rgba(167,139,250,.12); color:#c4b5fd; border:1px solid rgba(167,139,250,.22); }
+  .owner-label { font-size:9px; opacity:.7; text-transform:uppercase; letter-spacing:.05em; }
+
+  .card-stats { display:flex; gap:5px; flex-wrap:wrap; }
+  .stat-pill { font-size:10.5px; color:var(--muted); background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:5px; padding:2px 7px; white-space:nowrap; }
+  .stat-pill.green { color:#34d399; border-color:rgba(52,211,153,.2); background:rgba(52,211,153,.07); }
+  .stat-pill.blue  { color:var(--tag-color); border-color:rgba(79,124,255,.2); background:rgba(79,124,255,.07); }
+  .stat-pill.pipe  { border-color:currentColor; opacity:.85; }
+
+  /* ── Modal ── */
+  .overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,.78); backdrop-filter:blur(8px);
+    z-index:200; align-items:center; justify-content:center; padding:24px;
+  }
+  .overlay.open { display:flex; }
+  .modal {
+    background:var(--card); border:1px solid var(--border); border-radius:24px;
+    max-width:560px; width:100%; position:relative;
+    animation: popIn .25s cubic-bezier(.34,1.56,.64,1) both;
+    max-height:92vh; overflow-y:auto;
+  }
+  @keyframes popIn { from{opacity:0;transform:scale(.88)} to{opacity:1;transform:scale(1)} }
+
+  .modal-header {
+    display:flex; gap:20px; padding:26px 26px 20px; align-items:flex-start;
+    border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--card); z-index:1;
+  }
+  .modal-avatar { width:88px; height:88px; border-radius:50%; object-fit:cover; flex-shrink:0; border:3px solid var(--accent); }
+  .modal-avatar-init {
+    width:88px; height:88px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Syne',sans-serif; font-size:28px; font-weight:800;
+    color:var(--accent); background:linear-gradient(135deg,#1a1d2e,#0e1020); border:3px solid var(--accent);
+  }
+  .modal-company { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:var(--accent); margin-bottom:4px; }
+  .modal-name { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; color:#fff; margin-bottom:3px; }
+  .modal-role { font-size:12.5px; color:var(--muted); }
+  .modal-close {
+    position:absolute; top:16px; right:16px;
+    background:rgba(255,255,255,.07); border:none; color:var(--text);
+    width:32px; height:32px; border-radius:50%; font-size:16px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:background .15s;
+  }
+  .modal-close:hover { background:rgba(255,255,255,.14); }
+
+  .modal-section { padding:18px 26px; border-bottom:1px solid var(--border); }
+  .modal-section:last-child { border-bottom:none; }
+  .section-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:13px; }
+  .fields-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .field { display:flex; flex-direction:column; gap:4px; }
+  .field.full { grid-column:1/-1; }
+  .field label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
+  .field span { font-size:13.5px; color:var(--text); }
+  .field a { font-size:12.5px; color:var(--accent); text-decoration:none; word-break:break-all; }
+  .field a:hover { text-decoration:underline; }
+  .big-val { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; color:#fff; }
+
+  .pipeline-bar-bg { background:rgba(255,255,255,.07); border-radius:6px; height:6px; overflow:hidden; margin-bottom:8px; }
+  .pipeline-bar { height:100%; border-radius:6px; background:var(--accent); transition:width .4s ease; }
+  .pipeline-label { font-size:13px; color:var(--text); }
+
+  .empty { text-align:center; padding:80px 20px; color:var(--muted); font-size:14px; }
+  .empty-icon { font-size:44px; margin-bottom:14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">BOA <span>Contacts</span></div>
+  <div class="controls">
+    <select id="folderSelect" onchange="loadImages()">
+      <option value="">— Select Folder —</option>
+    </select>
+
+    <!-- BD filter pills -->
+    <div class="bd-filters" id="bdFilters"></div>
+
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search name, company, app..." oninput="applyFilters()">
+    </div>
+    <span class="count-badge" id="countBadge"></span>
+  </div>
+</header>
+
+<div class="grid-wrap">
+  <div class="grid" id="grid">
+    <div class="empty"><div class="empty-icon">📁</div>Please select a folder</div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-header">
+      <div id="mAvatar"></div>
+      <div>
+        <div class="modal-company" id="mCompany"></div>
+        <div class="modal-name" id="mName"></div>
+        <div class="modal-role" id="mRole"></div>
+      </div>
+    </div>
+
+    <div class="modal-section" id="mPipelineSection">
+      <div class="section-title">Sales Pipeline</div>
+      <div class="pipeline-bar-bg"><div class="pipeline-bar" id="mPipelineBar"></div></div>
+      <div class="pipeline-label" id="mPipelineLabel"></div>
+    </div>
+
+    <div class="modal-section">
+      <div class="section-title">App Info</div>
+      <div class="fields-grid">
+        <div class="field"><label>App Name</label><span id="mAppName">—</span></div>
+        <div class="field"><label>MMP</label><span id="mMMP">—</span></div>
+        <div class="field"><label>Daily Downloads</label><span class="big-val" id="mDL">—</span></div>
+        <div class="field"><label>DAU</label><span class="big-val" id="mDAU">—</span></div>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="section-title">In Charge</div>
+      <div class="fields-grid">
+        <div class="field"><label>BD</label><span id="mBD">—</span></div>
+        <div class="field"><label>ISR</label><span id="mISR">—</span></div>
+      </div>
+    </div>
+
+    <div class="modal-section" id="mLiSection">
+      <div class="section-title">LinkedIn</div>
+      <div class="field full"><a id="mLinkedIn" href="#" target="_blank" rel="noopener"></a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let allCards = [];
+let activeBD = "All";
+
+const PIPE_COLORS = { 1:"#f87171", 2:"#fbbf24", 3:"#60a5fa", 4:"#a78bfa", 5:"#34d399" };
+
+function parsePipeline(val) {
+  if (!val) return null;
+  const num = parseInt(val.trim().split("/")[0]);
+  const pct = isNaN(num) ? 0 : Math.min(num / 5 * 100, 100);
+  return { pct, label: val.trim(), color: PIPE_COLORS[num] || "#6b7280" };
+}
+
+function fmtNum(v) {
+  if (!v) return "—";
+  const n = parseFloat(String(v).replace(/,/g,""));
+  if (isNaN(n)) return v;
+  if (n >= 1000000) return (n/1000000).toFixed(1)+"M";
+  if (n >= 1000)    return (n/1000).toFixed(1)+"K";
+  return n.toLocaleString();
+}
+
+function initials(c) { return (c.first_name?.[0]||"")+(c.last_name?.[0]||""); }
+
+// ── Build BD filter pills ──────────────────────────────────────────────────
+function buildBDFilters(cards) {
+  const bds = ["All", ...new Set(cards.map(c => c.bd).filter(Boolean)).values()].sort((a,b) => a==="All"?-1:a.localeCompare(b));
+  const wrap = document.getElementById("bdFilters");
+  wrap.innerHTML = "";
+  bds.forEach(bd => {
+    const btn = document.createElement("button");
+    btn.className = "bd-btn" + (bd === activeBD ? " active" : "");
+    btn.textContent = bd;
+    btn.onclick = () => { activeBD = bd; document.querySelectorAll(".bd-btn").forEach(b => b.classList.toggle("active", b.textContent===bd)); applyFilters(); };
+    wrap.appendChild(btn);
+  });
+}
+
+// ── Load ──────────────────────────────────────────────────────────────────
+async function loadFolders() {
+  const folders = await fetch("/get_folders").then(r=>r.json());
+  const sel = document.getElementById("folderSelect");
+  folders.forEach(f => { const o=document.createElement("option"); o.value=o.textContent=f; sel.appendChild(o); });
+  if (folders.length) { sel.value=folders[0]; loadImages(); }
+}
+
+async function loadImages() {
+  const folder = document.getElementById("folderSelect").value;
+  if (!folder) return;
+  allCards = await fetch(`/get_images?folder=${encodeURIComponent(folder)}`).then(r=>r.json());
+  activeBD = "All";
+  buildBDFilters(allCards);
+  applyFilters();
+}
+
+// ── Filter ────────────────────────────────────────────────────────────────
+function applyFilters() {
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  let filtered = allCards;
+  if (activeBD !== "All") filtered = filtered.filter(c => c.bd === activeBD);
+  if (q) filtered = filtered.filter(c =>
+    `${c.name} ${c.company} ${c.role} ${c.app_name} ${c.mmp} ${c.bd} ${c.isr}`.toLowerCase().includes(q)
+  );
+  renderCards(filtered);
+}
+
+// ── Render ────────────────────────────────────────────────────────────────
+function renderCards(cards) {
+  const grid = document.getElementById("grid");
+  document.getElementById("countBadge").textContent = `${cards.length} people`;
+
+  if (!cards.length) {
+    grid.innerHTML=`<div class="empty"><div class="empty-icon">🔍</div>No contacts found</div>`;
+    return;
+  }
+
+  grid.innerHTML = "";
+  cards.forEach((c, i) => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.style.animationDelay = `${Math.min(i*20,240)}ms`;
+    div.onclick = () => openModal(c);
+
+    const pipe = parsePipeline(c.pipeline);
+    const ini  = initials(c);
+
+    div.innerHTML = `
+      <div class="card-photo-wrap">
+        <img class="card-photo" src="${c.img_src}"
+             onerror="this.parentElement.innerHTML='<div class=\\'card-initials\\'>${ini}</div>'"
+             alt="${c.name}">
+      </div>
+      <div class="card-body">
+        ${c.company?`<div class="card-company-big">${c.company}</div>`:""}
+        <div class="card-name">${c.name}</div>
+        <div class="card-role">${c.role||"—"}</div>
+        <div class="card-owners">
+          ${c.bd  ? `<span class="owner-badge bd"><span class="owner-label">BD</span>${c.bd}</span>`  : ""}
+          ${c.isr ? `<span class="owner-badge isr"><span class="owner-label">ISR</span>${c.isr}</span>` : ""}
+        </div>
+        <div class="card-stats">
+          ${pipe?`<span class="stat-pill pipe" style="color:${pipe.color}">${pipe.label}</span>`:""}
+          ${c.app_name?`<span class="stat-pill blue">${c.app_name}</span>`:""}
+          ${c.mmp?`<span class="stat-pill">${c.mmp}</span>`:""}
+          ${c.daily_dl?`<span class="stat-pill green">↓ ${fmtNum(c.daily_dl)}</span>`:""}
+          ${c.dau?`<span class="stat-pill">DAU ${fmtNum(c.dau)}</span>`:""}
+        </div>
+      </div>`;
+    grid.appendChild(div);
+  });
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────
+function openModal(c) {
+  const ini = initials(c);
+  document.getElementById("mAvatar").innerHTML =
+    `<img class="modal-avatar" src="${c.img_src}"
+          onerror="this.outerHTML='<div class=\\'modal-avatar-init\\'>${ini}</div>'"
+          alt="${c.name}">`;
+  document.getElementById("mCompany").textContent = c.company || "";
+  document.getElementById("mName").textContent    = c.name;
+  document.getElementById("mRole").textContent    = c.role || "";
+
+  const pipe = parsePipeline(c.pipeline);
+  const ps   = document.getElementById("mPipelineSection");
+  if (pipe) {
+    ps.style.display="";
+    const bar = document.getElementById("mPipelineBar");
+    bar.style.width="0%"; bar.style.background=pipe.color;
+    setTimeout(()=>bar.style.width=pipe.pct+"%", 50);
+    document.getElementById("mPipelineLabel").textContent = pipe.label;
+  } else { ps.style.display="none"; }
+
+  document.getElementById("mAppName").textContent = c.app_name||"—";
+  document.getElementById("mMMP").textContent     = c.mmp||"—";
+  document.getElementById("mDL").textContent      = fmtNum(c.daily_dl);
+  document.getElementById("mDAU").textContent     = fmtNum(c.dau);
+  document.getElementById("mBD").textContent      = c.bd||"—";
+  document.getElementById("mISR").textContent     = c.isr||"—";
+
+  const ls = document.getElementById("mLiSection");
+  const la = document.getElementById("mLinkedIn");
+  if (c.linkedin) { ls.style.display=""; la.href=la.textContent=c.linkedin; }
+  else { ls.style.display="none"; }
+
+  document.getElementById("overlay").classList.add("open");
+}
+
+function closeModal() { document.getElementById("overlay").classList.remove("open"); }
+function overlayClick(e) { if(e.target===document.getElementById("overlay")) closeModal(); }
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeModal(); });
+
+loadFolders();
+</script>
+</body>
+</html>

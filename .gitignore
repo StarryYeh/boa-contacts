@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.csv
+linkedin_scraper*.py
+linkedin_crawler*.py
+*.zip
