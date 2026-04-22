@@ -109,11 +109,17 @@
     border-radius:6px; padding:3px 8px; white-space:nowrap;
   }
   .stat-pill.green {
-    color:#34d399;
-    border-color:rgba(52,211,153,.2);
-    background:rgba(52,211,153,.07);
-    font-weight:600;
-  }
+  color:#fbbf24;
+  border-color:rgba(251,191,36,.25);
+  background:rgba(251,191,36,.10);
+  font-weight:700;
+}
+  .stat-pill.yellow {
+  color:#fbbf24;
+  border-color:rgba(251,191,36,.25);
+  background:rgba(251,191,36,.10);
+  font-weight:700;
+}
   .stat-pill.blue  {
     color:#bcd0ff;
     border-color:rgba(79,124,255,.32);
@@ -174,8 +180,7 @@
   .field a:hover { text-decoration:underline; }
   .big-val { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; color:#fff; }
 
-  .pipeline-bar-bg { background:rgba(255,255,255,.07); border-radius:6px; height:6px; overflow:hidden; margin-bottom:8px; }
-  .pipeline-bar { height:100%; border-radius:6px; background:var(--accent); transition:width .4s ease; }
+
   .pipeline-label { font-size:13px; color:var(--text); }
 
   .empty { text-align:center; padding:80px 20px; color:var(--muted); font-size:14px; }
@@ -229,7 +234,6 @@
 
     <div class="modal-section" id="mPipelineSection">
       <div class="section-title">Sales Pipeline</div>
-      <div class="pipeline-bar-bg"><div class="pipeline-bar" id="mPipelineBar"></div></div>
       <div class="pipeline-label" id="mPipelineLabel"></div>
     </div>
 
@@ -378,8 +382,8 @@ function renderCards(cards) {
           ${pipe ? `<span class="stat-pill pipe" style="color:${pipe.color}">${pipe.label}</span>` : ""}
           ${c.app_name ? `<span class="stat-pill blue app-pill">${c.app_name}</span>` : ""}
           ${c.mmp ? `<span class="stat-pill">${c.mmp}</span>` : ""}
-          ${c.daily_dl ? `<span class="stat-pill green">DL ${fmtNum(c.daily_dl)}</span>` : ""}
-          ${c.dau ? `<span class="stat-pill">DAU ${fmtNum(c.dau)}</span>` : ""}
+          ${c.daily_dl ? `<span class="stat-pill yellow">DL ${fmtNum(c.daily_dl)}</span>` : ""}
+          ${c.dau ? `<span class="stat-pill yellow">DAU ${fmtNum(c.dau)}</span>` : ""}
         </div>
       </div>`;
     grid.appendChild(div);
@@ -401,10 +405,6 @@ function openModal(c) {
   const ps = document.getElementById("mPipelineSection");
   if (pipe) {
     ps.style.display = "";
-    const bar = document.getElementById("mPipelineBar");
-    bar.style.width = "0%";
-    bar.style.background = pipe.color;
-    setTimeout(() => bar.style.width = pipe.pct + "%", 50);
     document.getElementById("mPipelineLabel").textContent = pipe.label;
   } else {
     ps.style.display = "none";
