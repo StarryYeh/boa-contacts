@@ -21,6 +21,7 @@ def load_people_data():
         return
     with open(DATA_FILE, newline="", encoding="utf-8-sig") as f:
         for row in csv.DictReader(f):
+            row = {k.strip(): v for k, v in row.items()}
             first = row.get("First name", row.get("First Name", "")).strip()
             last  = row.get("Last Name",  row.get("Last name",  "")).strip()
             name  = f"{first} {last}".strip()
