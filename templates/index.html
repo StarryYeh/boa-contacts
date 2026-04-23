@@ -7,192 +7,146 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0e0f13;
-    --surface: #16181f;
-    --card: #1c1f2a;
-    --card-hover: #222536;
-    --border: rgba(255,255,255,0.07);
-    --accent: #4f7cff;
-    --text: #e8eaf0;
-    --muted: #6b7280;
-    --tag-bg: rgba(79,124,255,0.12);
-    --tag-color: #93b4ff;
+    --bg:#0e0f13; --surface:#16181f; --card:#1c1f2a; --card-hover:#222536;
+    --border:rgba(255,255,255,0.07); --accent:#4f7cff; --text:#e8eaf0; --muted:#6b7280;
+    --tag-bg:rgba(79,124,255,0.12); --tag-color:#93b4ff;
+    --met:#10b981; --met-bg:rgba(16,185,129,0.12);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-  header {
-    padding: 20px 36px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; flex-wrap: wrap;
-    position: sticky; top: 0; z-index: 50;
-    background: rgba(14,15,19,0.95); backdrop-filter: blur(12px);
+  header{
+    padding:16px 32px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; flex-wrap:wrap;
+    position:sticky; top:0; z-index:50;
+    background:rgba(14,15,19,0.96); backdrop-filter:blur(12px);
   }
-  .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; color:#fff; letter-spacing:-0.5px; flex-shrink:0; }
-  .logo span { color: var(--accent); }
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#fff;flex-shrink:0;}
+  .logo span{color:var(--accent);}
 
-  .controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; flex:1; justify-content:flex-end; }
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:1;justify-content:flex-end;}
 
-  select, .search-wrap input {
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text); padding: 8px 12px; border-radius: 9px;
-    font-family:'DM Sans',sans-serif; font-size:13px; outline:none;
-    transition: border-color .2s; cursor:pointer;
+  select,.search-wrap input{
+    background:var(--surface);border:1px solid var(--border);
+    color:var(--text);padding:7px 12px;border-radius:9px;
+    font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;cursor:pointer;
   }
-  select:focus, .search-wrap input:focus { border-color: var(--accent); }
+  select:focus,.search-wrap input:focus{border-color:var(--accent);}
 
-  .bd-filters { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
-  .bd-btn {
-    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500;
-    padding: 6px 13px; border-radius: 20px; border: 1px solid var(--border);
-    background: var(--surface); color: var(--muted); cursor:pointer;
-    transition: all .15s; white-space:nowrap;
+  /* sort select */
+  .sort-select{padding:7px 10px;}
+
+  /* BD pills */
+  .bd-filters{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
+  .bd-btn{
+    font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
+    padding:5px 12px;border-radius:20px;border:1px solid var(--border);
+    background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;
   }
-  .bd-btn:hover { border-color: var(--accent); color: var(--text); }
-  .bd-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight:600; }
+  .bd-btn:hover{border-color:var(--accent);color:var(--text);}
+  .bd-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
 
-  .search-wrap { position:relative; }
-  .search-wrap input { width:200px; padding-left:30px; }
-  .search-icon { position:absolute; left:9px; top:50%; transform:translateY(-50%); opacity:.35; font-size:13px; pointer-events:none; }
-  .count-badge { font-size:12px; color:var(--muted); white-space:nowrap; padding: 0 4px; }
+  .search-wrap{position:relative;}
+  .search-wrap input{width:190px;padding-left:30px;}
+  .search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.35;font-size:13px;pointer-events:none;}
+  .count-badge{font-size:12px;color:var(--muted);white-space:nowrap;padding:0 4px;}
 
-  .grid-wrap { padding: 28px 36px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:18px; }
+  /* grid */
+  .grid-wrap{padding:24px 32px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;}
 
-  .card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 18px; overflow:hidden; cursor:pointer;
-    transition: transform .2s, background .2s, box-shadow .2s;
-    animation: fadeUp .3s ease both;
+  /* card */
+  .card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:18px;overflow:hidden;cursor:pointer;
+    transition:transform .2s,background .2s,box-shadow .2s;
+    animation:fadeUp .3s ease both; position:relative;
   }
-  .card:hover { transform:translateY(-4px); background:var(--card-hover); box-shadow:0 14px 40px rgba(0,0,0,.5); }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .card:hover{transform:translateY(-4px);background:var(--card-hover);box-shadow:0 14px 40px rgba(0,0,0,.5);}
+  .card.is-met{border-color:var(--met);box-shadow:0 0 0 1px var(--met);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-  .card-photo-wrap { width:100%; aspect-ratio:1; overflow:hidden; background:var(--surface); }
-  .card-photo { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s; }
-  .card:hover .card-photo { transform:scale(1.04); }
-  .card-initials {
-    width:100%; height:100%; display:flex; align-items:center; justify-content:center;
-    font-family:'Syne',sans-serif; font-size:48px; font-weight:800; color:var(--accent);
+  /* met badge on card */
+  .met-badge{
+    position:absolute;top:10px;right:10px;
+    background:var(--met);color:#fff;
+    font-size:10px;font-weight:700;letter-spacing:.05em;
+    padding:3px 8px;border-radius:12px;
+    display:flex;align-items:center;gap:4px;
+    box-shadow:0 2px 8px rgba(16,185,129,.4);
+    z-index:2;
+  }
+
+  .card-photo-wrap{width:100%;aspect-ratio:1;overflow:hidden;background:var(--surface);}
+  .card-photo{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
+  .card:hover .card-photo{transform:scale(1.04);}
+  .card-initials{
+    width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+    font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--accent);
     background:linear-gradient(135deg,#1a1d2e,#0e1020);
   }
 
-  .card-body { padding:14px 15px 15px; }
+  .card-body{padding:14px 15px 15px;}
+  .card-company-big{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .card-name{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .card-role{font-size:11.5px;color:var(--muted);margin-bottom:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-  .card-company-big {
-    font-family:'Syne',sans-serif;
-    font-size:13px; font-weight:700;
-    color: var(--accent);
-    letter-spacing: 0.02em;
-    margin-bottom: 6px;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
+  .card-owners{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
+  .owner-badge{font-size:10.5px;font-weight:500;padding:3px 8px;border-radius:5px;display:flex;align-items:center;gap:4px;}
+  .owner-badge.bd{background:rgba(79,124,255,.15);color:#93b4ff;border:1px solid rgba(79,124,255,.25);}
+  .owner-badge.isr{background:rgba(167,139,250,.12);color:#c4b5fd;border:1px solid rgba(167,139,250,.22);}
+  .owner-label{font-size:9px;opacity:.7;text-transform:uppercase;letter-spacing:.05em;}
 
-  .card-name {
-    font-family:'Syne',sans-serif; font-weight:700; font-size:15px;
-    color:#fff; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
-  .card-role {
-    font-size:11.5px; color:var(--muted); margin-bottom:8px;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
+  .card-stats{display:flex;gap:5px;flex-wrap:wrap;}
+  .stat-pill{font-size:10.5px;color:var(--muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:5px;padding:2px 7px;white-space:nowrap;}
+  .stat-pill.blue{color:var(--tag-color);border-color:rgba(79,124,255,.2);background:rgba(79,124,255,.07);}
+  .stat-pill.yellow{color:#fbbf24;border-color:rgba(251,191,36,.2);background:rgba(251,191,36,.07);}
 
-  .card-stats {
-    display:flex; gap:6px; flex-wrap:wrap;
-    align-items:center;
-  }
-  .stat-pill {
-    font-size:10.5px; color:var(--muted);
-    background:rgba(255,255,255,0.04);
-    border:1px solid var(--border);
-    border-radius:6px; padding:3px 8px; white-space:nowrap;
-  }
-  .stat-pill.green {
-  color:#fbbf24;
-  border-color:rgba(251,191,36,.25);
-  background:rgba(251,191,36,.10);
-  font-weight:700;
-}
-  .stat-pill.yellow {
-  color:#fbbf24;
-  border-color:rgba(251,191,36,.25);
-  background:rgba(251,191,36,.10);
-  font-weight:700;
-}
-  .stat-pill.blue  {
-    color:#bcd0ff;
-    border-color:rgba(79,124,255,.32);
-    background:rgba(79,124,255,.14);
-    font-weight:700;
-  }
-  .stat-pill.app-pill {
-    font-size:11.5px;
-    padding:4px 9px;
-  }
-  .stat-pill.pipe  { border-color:currentColor; opacity:.9; font-weight:600; }
+  /* modal */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:24px;}
+  .overlay.open{display:flex;}
+  .modal{background:var(--card);border:1px solid var(--border);border-radius:24px;max-width:560px;width:100%;position:relative;animation:popIn .25s cubic-bezier(.34,1.56,.64,1) both;max-height:92vh;overflow-y:auto;}
+  @keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
 
-  .overlay {
-    display:none; position:fixed; inset:0;
-    background:rgba(0,0,0,.78); backdrop-filter:blur(8px);
-    z-index:200; align-items:center; justify-content:center; padding:24px;
-  }
-  .overlay.open { display:flex; }
-  .modal {
-    background:var(--card); border:1px solid var(--border); border-radius:24px;
-    max-width:560px; width:100%; position:relative;
-    animation: popIn .25s cubic-bezier(.34,1.56,.64,1) both;
-    max-height:92vh; overflow-y:auto;
-  }
-  @keyframes popIn { from{opacity:0;transform:scale(.88)} to{opacity:1;transform:scale(1)} }
+  .modal-header{display:flex;gap:20px;padding:24px 24px 18px;align-items:flex-start;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--card);z-index:1;}
+  .modal-avatar{width:88px;height:88px;border-radius:50%;object-fit:cover;flex-shrink:0;border:3px solid var(--accent);}
+  .modal-avatar-init{width:88px;height:88px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--accent);background:linear-gradient(135deg,#1a1d2e,#0e1020);border:3px solid var(--accent);}
+  .modal-company{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:3px;}
+  .modal-name{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#fff;margin-bottom:3px;}
+  .modal-role{font-size:12.5px;color:var(--muted);margin-bottom:10px;}
 
-  .modal-header {
-    display:flex; gap:20px; padding:26px 26px 20px; align-items:flex-start;
-    border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--card); z-index:1;
+  /* met toggle button */
+  .met-toggle{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;
+    border:1px solid var(--border);background:var(--surface);color:var(--muted);
+    cursor:pointer;transition:all .2s;
   }
-  .modal-avatar { width:88px; height:88px; border-radius:50%; object-fit:cover; flex-shrink:0; border:3px solid var(--accent); }
-  .modal-avatar-init {
-    width:88px; height:88px; border-radius:50%; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Syne',sans-serif; font-size:28px; font-weight:800;
-    color:var(--accent); background:linear-gradient(135deg,#1a1d2e,#0e1020); border:3px solid var(--accent);
-  }
-  .modal-company { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:var(--accent); margin-bottom:4px; }
-  .modal-name { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; color:#fff; margin-bottom:3px; }
-  .modal-role { font-size:12.5px; color:var(--muted); }
-  .modal-close {
-    position:absolute; top:16px; right:16px;
-    background:rgba(255,255,255,.07); border:none; color:var(--text);
-    width:32px; height:32px; border-radius:50%; font-size:16px; cursor:pointer;
-    display:flex; align-items:center; justify-content:center; transition:background .15s;
-  }
-  .modal-close:hover { background:rgba(255,255,255,.14); }
+  .met-toggle:hover{border-color:var(--met);color:var(--met);}
+  .met-toggle.active{background:var(--met-bg);border-color:var(--met);color:var(--met);}
 
-  .modal-section { padding:18px 26px; border-bottom:1px solid var(--border); }
-  .modal-section:last-child { border-bottom:none; }
-  .section-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:13px; }
-  .fields-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  .field { display:flex; flex-direction:column; gap:4px; }
-  .field.full { grid-column:1/-1; }
-  .field label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
-  .field span { font-size:13.5px; color:var(--text); }
-  .field a { font-size:12.5px; color:var(--accent); text-decoration:none; word-break:break-all; }
-  .field a:hover { text-decoration:underline; }
-  .big-val { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; color:#fff; }
+  .modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.07);border:none;color:var(--text);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+  .modal-close:hover{background:rgba(255,255,255,.14);}
 
+  .modal-section{padding:18px 24px;border-bottom:1px solid var(--border);}
+  .modal-section:last-child{border-bottom:none;}
+  .section-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:13px;}
+  .fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .field{display:flex;flex-direction:column;gap:4px;}
+  .field.full{grid-column:1/-1;}
+  .field label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);}
+  .field span{font-size:13.5px;color:var(--text);}
+  .field a{font-size:12.5px;color:var(--accent);text-decoration:none;word-break:break-all;}
+  .field a:hover{text-decoration:underline;}
+  .big-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:#fff;}
 
-  .pipeline-label { font-size:13px; color:var(--text); }
+  .pipeline-bar-bg{background:rgba(255,255,255,.07);border-radius:6px;height:6px;overflow:hidden;margin-bottom:8px;}
+  .pipeline-bar{height:100%;border-radius:6px;background:var(--accent);transition:width .4s ease;}
+  .pipeline-label{font-size:13px;color:var(--text);}
 
-  .empty { text-align:center; padding:80px 20px; color:var(--muted); font-size:14px; }
-  .empty-icon { font-size:44px; margin-bottom:14px; }
-
-  @media (max-width: 640px) {
-    header { padding:16px 18px; }
-    .grid-wrap { padding:20px 18px; }
-    .controls { justify-content:flex-start; }
-    .search-wrap input { width:160px; }
-    .fields-grid { grid-template-columns:1fr; }
-  }
+  .empty{text-align:center;padding:80px 20px;color:var(--muted);font-size:14px;}
+  .empty-icon{font-size:44px;margin-bottom:14px;}
 </style>
 </head>
 <body>
@@ -205,6 +159,13 @@
     </select>
 
     <div class="bd-filters" id="bdFilters"></div>
+
+    <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+      <option value="name">Sort: Name</option>
+      <option value="dl_desc">Sort: DL ↓ High</option>
+      <option value="dl_asc">Sort: DL ↑ Low</option>
+      <option value="met_first">Sort: Met First</option>
+    </select>
 
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
@@ -220,15 +181,19 @@
   </div>
 </div>
 
+<!-- Modal -->
 <div class="overlay" id="overlay" onclick="overlayClick(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-header">
       <div id="mAvatar"></div>
-      <div>
+      <div style="flex:1">
         <div class="modal-company" id="mCompany"></div>
         <div class="modal-name" id="mName"></div>
         <div class="modal-role" id="mRole"></div>
+        <button class="met-toggle" id="metToggle" onclick="toggleMet()">
+          <span id="metIcon">○</span><span id="metText">Mark as Met</span>
+        </button>
       </div>
     </div>
 
@@ -242,7 +207,7 @@
       <div class="fields-grid">
         <div class="field"><label>App Name</label><span id="mAppName">—</span></div>
         <div class="field"><label>MMP</label><span id="mMMP">—</span></div>
-        <div class="field"><label>DL</label><span class="big-val" id="mDL">—</span></div>
+        <div class="field"><label>Daily Downloads</label><span class="big-val" id="mDL">—</span></div>
         <div class="field"><label>DAU</label><span class="big-val" id="mDAU">—</span></div>
       </div>
     </div>
@@ -265,182 +230,172 @@
 <script>
 let allCards = [];
 let activeBD = "All";
+let currentCard = null;   // modal 目前顯示的卡片
 
-const PIPE_COLORS = { 1:"#f87171", 2:"#fbbf24", 3:"#60a5fa", 4:"#a78bfa", 5:"#34d399" };
+const PIPE_COLORS = {1:"#f87171",2:"#fbbf24",3:"#60a5fa",4:"#a78bfa",5:"#34d399"};
 
-function parsePipeline(val) {
-  if (!val) return null;
-  const num = parseInt(String(val).trim().split("/")[0]);
-  const pct = isNaN(num) ? 0 : Math.min(num / 5 * 100, 100);
-  return { pct, label: String(val).trim(), color: PIPE_COLORS[num] || "#6b7280" };
+function parsePipeline(val){
+  if(!val) return null;
+  const num=parseInt(val.trim().split("/")[0]);
+  return{pct:isNaN(num)?0:Math.min(num/5*100,100),label:val.trim(),color:PIPE_COLORS[num]||"#6b7280"};
 }
-
-function fmtNum(v) {
-  if (!v) return "—";
-  const n = parseFloat(String(v).replace(/,/g,""));
-  if (isNaN(n)) return v;
-  if (n >= 1000000) return (n/1000000).toFixed(1)+"M";
-  if (n >= 1000) return (n/1000).toFixed(1)+"K";
+function fmtNum(v){
+  if(!v) return"—";
+  const n=parseFloat(String(v).replace(/,/g,""));
+  if(isNaN(n)) return v;
+  if(n>=1000000) return(n/1000000).toFixed(1)+"M";
+  if(n>=1000)    return(n/1000).toFixed(1)+"K";
   return n.toLocaleString();
 }
+function initials(c){return(c.first_name?.[0]||"")+(c.last_name?.[0]||"");}
 
-function initials(c) {
-  return (c.first_name?.[0] || "") + (c.last_name?.[0] || "");
-}
-
-function buildBDFilters(cards) {
-  const bds = ["All", ...new Set(cards.map(c => c.bd).filter(Boolean)).values()]
-    .sort((a,b) => a === "All" ? -1 : a.localeCompare(b));
-
-  const wrap = document.getElementById("bdFilters");
-  wrap.innerHTML = "";
-
-  bds.forEach(bd => {
-    const btn = document.createElement("button");
-    btn.className = "bd-btn" + (bd === activeBD ? " active" : "");
-    btn.textContent = bd;
-    btn.onclick = () => {
-      activeBD = bd;
-      document.querySelectorAll(".bd-btn").forEach(b => b.classList.toggle("active", b.textContent === bd));
-      applyFilters();
-    };
+// ── BD filters ────────────────────────────────────────────────────────────
+function buildBDFilters(cards){
+  const bds=["All",...new Set(cards.map(c=>c.bd).filter(Boolean))].sort((a,b)=>a==="All"?-1:a.localeCompare(b));
+  const wrap=document.getElementById("bdFilters");
+  wrap.innerHTML="";
+  bds.forEach(bd=>{
+    const btn=document.createElement("button");
+    btn.className="bd-btn"+(bd===activeBD?" active":"");
+    btn.textContent=bd;
+    btn.onclick=()=>{activeBD=bd;document.querySelectorAll(".bd-btn").forEach(b=>b.classList.toggle("active",b.textContent===bd));applyFilters();};
     wrap.appendChild(btn);
   });
 }
 
-async function loadFolders() {
-  const folders = await fetch("/get_folders").then(r => r.json());
-  const sel = document.getElementById("folderSelect");
-  folders.forEach(f => {
-    const o = document.createElement("option");
-    o.value = o.textContent = f;
-    sel.appendChild(o);
-  });
-  if (folders.length) {
-    sel.value = folders[0];
-    loadImages();
-  }
+// ── Load ──────────────────────────────────────────────────────────────────
+async function loadFolders(){
+  const folders=await fetch("/get_folders").then(r=>r.json());
+  const sel=document.getElementById("folderSelect");
+  folders.forEach(f=>{const o=document.createElement("option");o.value=o.textContent=f;sel.appendChild(o);});
+  if(folders.length){sel.value=folders[0];loadImages();}
 }
-
-async function loadImages() {
-  const folder = document.getElementById("folderSelect").value;
-  if (!folder) return;
-  allCards = await fetch(`/get_images?folder=${encodeURIComponent(folder)}`).then(r => r.json());
-  activeBD = "All";
+async function loadImages(){
+  const folder=document.getElementById("folderSelect").value;
+  if(!folder) return;
+  allCards=await fetch(`/get_images?folder=${encodeURIComponent(folder)}`).then(r=>r.json());
+  activeBD="All";
   buildBDFilters(allCards);
   applyFilters();
 }
 
-function applyFilters() {
-  const q = document.getElementById("searchInput").value.toLowerCase();
-  let filtered = allCards;
+// ── Sort + Filter ─────────────────────────────────────────────────────────
+function applyFilters(){
+  const q=document.getElementById("searchInput").value.toLowerCase();
+  const sort=document.getElementById("sortSelect").value;
+  let list=[...allCards];
 
-  if (activeBD !== "All") {
-    filtered = filtered.filter(c => c.bd === activeBD);
-  }
+  if(activeBD!=="All") list=list.filter(c=>c.bd===activeBD);
+  if(q) list=list.filter(c=>`${c.name} ${c.company} ${c.role} ${c.app_name} ${c.mmp} ${c.bd} ${c.isr}`.toLowerCase().includes(q));
 
-  if (q) {
-    filtered = filtered.filter(c =>
-      `${c.name} ${c.company} ${c.role} ${c.app_name} ${c.mmp} ${c.bd} ${c.isr}`.toLowerCase().includes(q)
-    );
-  }
+  if(sort==="dl_desc") list.sort((a,b)=>b.daily_dl_num-a.daily_dl_num);
+  else if(sort==="dl_asc") list.sort((a,b)=>a.daily_dl_num-b.daily_dl_num);
+  else if(sort==="met_first") list.sort((a,b)=>(b.met?1:0)-(a.met?1:0));
+  else list.sort((a,b)=>a.name.localeCompare(b.name));
 
-  renderCards(filtered);
+  renderCards(list);
 }
 
-function renderCards(cards) {
-  const grid = document.getElementById("grid");
-  document.getElementById("countBadge").textContent = `${cards.length} people`;
+// ── Render ────────────────────────────────────────────────────────────────
+function renderCards(cards){
+  const grid=document.getElementById("grid");
+  document.getElementById("countBadge").textContent=`${cards.length} people`;
+  if(!cards.length){grid.innerHTML=`<div class="empty"><div class="empty-icon">🔍</div>No contacts found</div>`;return;}
 
-  if (!cards.length) {
-    grid.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div>No contacts found</div>`;
-    return;
-  }
-
-  grid.innerHTML = "";
-
-  cards.forEach((c, i) => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.style.animationDelay = `${Math.min(i * 20, 240)}ms`;
-    div.onclick = () => openModal(c);
-
-    const pipe = parsePipeline(c.pipeline);
-    const ini = initials(c);
-
-    div.innerHTML = `
+  grid.innerHTML="";
+  cards.forEach((c,i)=>{
+    const div=document.createElement("div");
+    div.className="card"+(c.met?" is-met":"");
+    div.style.animationDelay=`${Math.min(i*18,220)}ms`;
+    div.dataset.file=c.file;
+    div.onclick=()=>openModal(c);
+    const ini=initials(c);
+    div.innerHTML=`
+      ${c.met?`<div class="met-badge">✓ Met</div>`:""}
       <div class="card-photo-wrap">
         <img class="card-photo" src="${c.img_src}"
              onerror="this.parentElement.innerHTML='<div class=\\'card-initials\\'>${ini}</div>'"
              alt="${c.name}">
       </div>
       <div class="card-body">
-        ${c.company ? `<div class="card-company-big">${c.company}</div>` : ""}
+        ${c.company?`<div class="card-company-big">${c.company}</div>`:""}
         <div class="card-name">${c.name}</div>
-        <div class="card-role">${c.role || "—"}</div>
+        <div class="card-role">${c.role||"—"}</div>
         <div class="card-stats">
-          ${pipe ? `<span class="stat-pill pipe" style="color:${pipe.color}">${pipe.label}</span>` : ""}
-          ${c.app_name ? `<span class="stat-pill blue app-pill">${c.app_name}</span>` : ""}
-          ${c.mmp ? `<span class="stat-pill">${c.mmp}</span>` : ""}
-          ${c.daily_dl ? `<span class="stat-pill yellow">DL ${fmtNum(c.daily_dl)}</span>` : ""}
-          ${c.dau ? `<span class="stat-pill yellow">DAU ${fmtNum(c.dau)}</span>` : ""}
+          ${c.pipeline?`<span class="stat-pill">${c.pipeline}</span>`:""}
+          ${c.app_name?`<span class="stat-pill blue">${c.app_name}</span>`:""}
+          ${c.mmp?`<span class="stat-pill">${c.mmp}</span>`:""}
+          ${c.daily_dl?`<span class="stat-pill yellow">DL ${fmtNum(c.daily_dl)}</span>`:""}
+          ${c.dau?`<span class="stat-pill yellow">DAU ${fmtNum(c.dau)}</span>`:""}
         </div>
       </div>`;
     grid.appendChild(div);
   });
 }
 
-function openModal(c) {
-  const ini = initials(c);
-  document.getElementById("mAvatar").innerHTML =
+// ── Modal ─────────────────────────────────────────────────────────────────
+function openModal(c){
+  currentCard=c;
+  const ini=initials(c);
+  document.getElementById("mAvatar").innerHTML=
     `<img class="modal-avatar" src="${c.img_src}"
           onerror="this.outerHTML='<div class=\\'modal-avatar-init\\'>${ini}</div>'"
           alt="${c.name}">`;
+  document.getElementById("mCompany").textContent=c.company||"";
+  document.getElementById("mName").textContent=c.name;
+  document.getElementById("mRole").textContent=c.role||"";
 
-  document.getElementById("mCompany").textContent = c.company || "";
-  document.getElementById("mName").textContent = c.name;
-  document.getElementById("mRole").textContent = c.role || "";
+  updateMetToggle(c.met);
 
-  const pipe = parsePipeline(c.pipeline);
-  const ps = document.getElementById("mPipelineSection");
-  if (pipe) {
-    ps.style.display = "";
-    document.getElementById("mPipelineLabel").textContent = pipe.label;
-  } else {
-    ps.style.display = "none";
-  }
+  const ps=document.getElementById("mPipelineSection");
+  if(c.pipeline){ps.style.display="";document.getElementById("mPipelineLabel").textContent=c.pipeline;}
+  else ps.style.display="none";
 
-  document.getElementById("mAppName").textContent = c.app_name || "—";
-  document.getElementById("mMMP").textContent = c.mmp || "—";
-  document.getElementById("mDL").textContent = fmtNum(c.daily_dl);
-  document.getElementById("mDAU").textContent = fmtNum(c.dau);
-  document.getElementById("mBD").textContent = c.bd || "—";
-  document.getElementById("mISR").textContent = c.isr || "—";
+  document.getElementById("mAppName").textContent=c.app_name||"—";
+  document.getElementById("mMMP").textContent=c.mmp||"—";
+  document.getElementById("mDL").textContent=fmtNum(c.daily_dl);
+  document.getElementById("mDAU").textContent=fmtNum(c.dau);
+  document.getElementById("mBD").textContent=c.bd||"—";
+  document.getElementById("mISR").textContent=c.isr||"—";
 
-  const ls = document.getElementById("mLiSection");
-  const la = document.getElementById("mLinkedIn");
-  if (c.linkedin) {
-    ls.style.display = "";
-    la.href = c.linkedin;
-    la.textContent = c.linkedin;
-  } else {
-    ls.style.display = "none";
-  }
+  const ls=document.getElementById("mLiSection"),la=document.getElementById("mLinkedIn");
+  if(c.linkedin){ls.style.display="";la.href=la.textContent=c.linkedin;}
+  else ls.style.display="none";
 
   document.getElementById("overlay").classList.add("open");
 }
 
-function closeModal() {
-  document.getElementById("overlay").classList.remove("open");
+function updateMetToggle(met){
+  const btn=document.getElementById("metToggle");
+  document.getElementById("metIcon").textContent=met?"✓":"○";
+  document.getElementById("metText").textContent=met?"Met ✓":"Mark as Met";
+  btn.classList.toggle("active",met);
 }
 
-function overlayClick(e) {
-  if (e.target === document.getElementById("overlay")) closeModal();
+async function toggleMet(){
+  if(!currentCard) return;
+  const res=await fetch("/toggle_met",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({file:currentCard.file})});
+  const data=await res.json();
+  if(data.ok){
+    currentCard.met=data.met;
+    // update allCards
+    const idx=allCards.findIndex(c=>c.file===currentCard.file);
+    if(idx>=0) allCards[idx].met=data.met;
+    updateMetToggle(data.met);
+    // update card in grid
+    const cardEl=document.querySelector(`.card[data-file="${currentCard.file}"]`);
+    if(cardEl){
+      cardEl.classList.toggle("is-met",data.met);
+      const badge=cardEl.querySelector(".met-badge");
+      if(data.met&&!badge){cardEl.insertAdjacentHTML("afterbegin",`<div class="met-badge">✓ Met</div>`);}
+      else if(!data.met&&badge) badge.remove();
+    }
+  }
 }
 
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") closeModal();
-});
+function closeModal(){document.getElementById("overlay").classList.remove("open");currentCard=null;}
+function overlayClick(e){if(e.target===document.getElementById("overlay"))closeModal();}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
 
 loadFolders();
 </script>
