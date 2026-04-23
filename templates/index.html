@@ -181,6 +181,7 @@
       <option value="dl_desc">Sort: DL ↓ High</option>
       <option value="dl_asc">Sort: DL ↑ Low</option>
       <option value="met_first">Sort: Met First</option>
+      <option value="met_last">Sort: Met Last</option>
     </select>
 
     <div class="search-wrap">
@@ -307,6 +308,7 @@ function applyFilters(){
   if(sort==="dl_desc") list.sort((a,b)=>b.daily_dl_num-a.daily_dl_num);
   else if(sort==="dl_asc") list.sort((a,b)=>a.daily_dl_num-b.daily_dl_num);
   else if(sort==="met_first") list.sort((a,b)=>(b.met?1:0)-(a.met?1:0));
+  else if(sort==="met_last") list.sort((a,b)=>(a.met?1:0)-(b.met?1:0));
   else list.sort((a,b)=>a.name.localeCompare(b.name));
 
   renderCards(list);
