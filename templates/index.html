@@ -100,9 +100,9 @@
 
   .card-stats{display:flex;gap:5px;flex-wrap:wrap;}
   .stat-pill{font-size:10.5px;color:var(--muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:5px;padding:2px 7px;white-space:nowrap;}
-  .stat-pill.app{color:#60a5fa;border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.12);font-weight:700;font-size:11px;}
-  .stat-pill.mint{color:#6ee7b7;border-color:rgba(110,231,183,.2);background:rgba(110,231,183,.07);}
-  .stat-pill.yellow{color:#fbbf24;border-color:rgba(251,191,36,.2);background:rgba(251,191,36,.07);}
+  .stat-pill.app{color:#60a5fa;border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.12);font-size:11px;}
+  .stat-pill.mint{color:#6ee7b7;border-color:rgba(110,231,183,.2);background:rgba(110,231,183,.07);font-weight:700;font-size:11px;}
+  .stat-pill.yellow{color:#fbbf24;border-color:rgba(251,191,36,.2);background:rgba(251,191,36,.07);font-weight:700;}
 
   /* card met toggle button */
   .card-met-btn{
@@ -338,11 +338,11 @@ function renderCards(cards){
         <div class="card-name">${c.name}</div>
         <div class="card-role">${c.role||"—"}</div>
         <div class="card-stats">
-          ${c.pipeline?`<span class="stat-pill">${c.pipeline}</span>`:""}
           ${c.app_name?`<span class="stat-pill mint">${c.app_name}</span>`:""}
-          ${c.mmp?`<span class="stat-pill app">${c.mmp}</span>`:""}
           ${c.daily_dl?`<span class="stat-pill yellow">DL ${fmtNum(c.daily_dl)}</span>`:""}
           ${c.dau?`<span class="stat-pill yellow">DAU ${fmtNum(c.dau)}</span>`:""}
+          ${c.mmp?`<span class="stat-pill app">${c.mmp}</span>`:""}
+          ${c.pipeline?`<span class="stat-pill">${c.pipeline}</span>`:""}
         </div>
       </div>`;
     grid.appendChild(div);
