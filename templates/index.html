@@ -107,16 +107,17 @@
   /* card met toggle button */
   .card-met-btn{
     position:absolute;top:10px;right:10px;
-    width:28px;height:28px;border-radius:50%;
-    border:1.5px solid rgba(255,255,255,.2);
-    background:rgba(0,0,0,.45);
-    color:rgba(255,255,255,.45);
-    font-size:14px;line-height:1;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    z-index:3;transition:all .2s;backdrop-filter:blur(4px);
+    padding:4px 10px;border-radius:20px;
+    border:1.5px solid rgba(255,255,255,.25);
+    background:rgba(0,0,0,.55);
+    color:rgba(255,255,255,.65);
+    font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:.02em;
+    cursor:pointer;white-space:nowrap;
+    display:flex;align-items:center;gap:4px;
+    z-index:3;transition:all .2s;backdrop-filter:blur(6px);
   }
-  .card-met-btn:hover{border-color:var(--met);color:var(--met);}
-  .card-met-btn.active{background:var(--met-bg);border-color:var(--met);color:var(--met);box-shadow:0 0 0 1px var(--met);}
+  .card-met-btn:hover{border-color:var(--met);color:var(--met);background:rgba(0,0,0,.7);}
+  .card-met-btn.active{background:var(--met-bg);border-color:var(--met);color:var(--met);}
 
   /* modal */
   .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:24px;}
@@ -326,7 +327,7 @@ function renderCards(cards){
     div.onclick=()=>openModal(c);
     const ini=initials(c);
     div.innerHTML=`
-      <button class="card-met-btn${c.met?" active":""}" onclick="toggleMetCard('${c.file}',event)" title="${c.met?"Met ✓":"Mark as Met"}">${c.met?"✓":"○"}</button>
+      <button class="card-met-btn${c.met?" active":""}" onclick="toggleMetCard('${c.file}',event)">${c.met?"✓ Met":"+ Mark Met"}</button>
       <div class="card-photo-wrap">
         <img class="card-photo" src="${c.img_src}"
              onerror="this.parentElement.innerHTML='<div class=\\'card-initials\\'>${ini}</div>'"
@@ -338,8 +339,8 @@ function renderCards(cards){
         <div class="card-role">${c.role||"—"}</div>
         <div class="card-stats">
           ${c.pipeline?`<span class="stat-pill">${c.pipeline}</span>`:""}
-          ${c.app_name?`<span class="stat-pill app">${c.app_name}</span>`:""}
-          ${c.mmp?`<span class="stat-pill mint">${c.mmp}</span>`:""}
+          ${c.app_name?`<span class="stat-pill mint">${c.app_name}</span>`:""}
+          ${c.mmp?`<span class="stat-pill app">${c.mmp}</span>`:""}
           ${c.daily_dl?`<span class="stat-pill yellow">DL ${fmtNum(c.daily_dl)}</span>`:""}
           ${c.dau?`<span class="stat-pill yellow">DAU ${fmtNum(c.dau)}</span>`:""}
         </div>
@@ -397,7 +398,7 @@ async function doToggleMet(file){
   if(cardEl){
     cardEl.classList.toggle("is-met",data.met);
     const btn=cardEl.querySelector(".card-met-btn");
-    if(btn){btn.classList.toggle("active",data.met);btn.textContent=data.met?"✓":"○";btn.title=data.met?"Met ✓":"Mark as Met";}
+    if(btn){btn.classList.toggle("active",data.met);btn.textContent=data.met?"✓ Met":"+ Mark Met";}
   }
   if(currentCard&&currentCard.file===file){currentCard.met=data.met;updateMetToggle(data.met);}
 }
