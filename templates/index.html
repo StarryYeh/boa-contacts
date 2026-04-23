@@ -100,8 +100,23 @@
 
   .card-stats{display:flex;gap:5px;flex-wrap:wrap;}
   .stat-pill{font-size:10.5px;color:var(--muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:5px;padding:2px 7px;white-space:nowrap;}
-  .stat-pill.blue{color:var(--tag-color);border-color:rgba(79,124,255,.2);background:rgba(79,124,255,.07);}
+  .stat-pill.app{color:#60a5fa;border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.12);font-weight:700;font-size:11px;}
+  .stat-pill.mint{color:#6ee7b7;border-color:rgba(110,231,183,.2);background:rgba(110,231,183,.07);}
   .stat-pill.yellow{color:#fbbf24;border-color:rgba(251,191,36,.2);background:rgba(251,191,36,.07);}
+
+  /* card met toggle button */
+  .card-met-btn{
+    position:absolute;top:10px;right:10px;
+    width:28px;height:28px;border-radius:50%;
+    border:1.5px solid rgba(255,255,255,.2);
+    background:rgba(0,0,0,.45);
+    color:rgba(255,255,255,.45);
+    font-size:14px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    z-index:3;transition:all .2s;backdrop-filter:blur(4px);
+  }
+  .card-met-btn:hover{border-color:var(--met);color:var(--met);}
+  .card-met-btn.active{background:var(--met-bg);border-color:var(--met);color:var(--met);box-shadow:0 0 0 1px var(--met);}
 
   /* modal */
   .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:24px;}
@@ -311,7 +326,7 @@ function renderCards(cards){
     div.onclick=()=>openModal(c);
     const ini=initials(c);
     div.innerHTML=`
-      ${c.met?`<div class="met-badge">✓ Met</div>`:""}
+      <button class="card-met-btn${c.met?" active":""}" onclick="toggleMetCard('${c.file}',event)" title="${c.met?"Met ✓":"Mark as Met"}">${c.met?"✓":"○"}</button>
       <div class="card-photo-wrap">
         <img class="card-photo" src="${c.img_src}"
              onerror="this.parentElement.innerHTML='<div class=\\'card-initials\\'>${ini}</div>'"
@@ -323,8 +338,8 @@ function renderCards(cards){
         <div class="card-role">${c.role||"—"}</div>
         <div class="card-stats">
           ${c.pipeline?`<span class="stat-pill">${c.pipeline}</span>`:""}
-          ${c.app_name?`<span class="stat-pill blue">${c.app_name}</span>`:""}
-          ${c.mmp?`<span class="stat-pill">${c.mmp}</span>`:""}
+          ${c.app_name?`<span class="stat-pill app">${c.app_name}</span>`:""}
+          ${c.mmp?`<span class="stat-pill mint">${c.mmp}</span>`:""}
           ${c.daily_dl?`<span class="stat-pill yellow">DL ${fmtNum(c.daily_dl)}</span>`:""}
           ${c.dau?`<span class="stat-pill yellow">DAU ${fmtNum(c.dau)}</span>`:""}
         </div>
@@ -372,26 +387,23 @@ function updateMetToggle(met){
   btn.classList.toggle("active",met);
 }
 
-async function toggleMet(){
-  if(!currentCard) return;
-  const res=await fetch("/toggle_met",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({file:currentCard.file})});
+async function doToggleMet(file){
+  const res=await fetch("/toggle_met",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({file})});
   const data=await res.json();
-  if(data.ok){
-    currentCard.met=data.met;
-    // update allCards
-    const idx=allCards.findIndex(c=>c.file===currentCard.file);
-    if(idx>=0) allCards[idx].met=data.met;
-    updateMetToggle(data.met);
-    // update card in grid
-    const cardEl=document.querySelector(`.card[data-file="${currentCard.file}"]`);
-    if(cardEl){
-      cardEl.classList.toggle("is-met",data.met);
-      const badge=cardEl.querySelector(".met-badge");
-      if(data.met&&!badge){cardEl.insertAdjacentHTML("afterbegin",`<div class="met-badge">✓ Met</div>`);}
-      else if(!data.met&&badge) badge.remove();
-    }
+  if(!data.ok) return;
+  const idx=allCards.findIndex(c=>c.file===file);
+  if(idx>=0) allCards[idx].met=data.met;
+  const cardEl=document.querySelector(`.card[data-file="${file}"]`);
+  if(cardEl){
+    cardEl.classList.toggle("is-met",data.met);
+    const btn=cardEl.querySelector(".card-met-btn");
+    if(btn){btn.classList.toggle("active",data.met);btn.textContent=data.met?"✓":"○";btn.title=data.met?"Met ✓":"Mark as Met";}
   }
+  if(currentCard&&currentCard.file===file){currentCard.met=data.met;updateMetToggle(data.met);}
 }
+
+async function toggleMetCard(file,e){e.stopPropagation();await doToggleMet(file);}
+async function toggleMet(){if(!currentCard)return;await doToggleMet(currentCard.file);}
 
 function closeModal(){document.getElementById("overlay").classList.remove("open");currentCard=null;}
 function overlayClick(e){if(e.target===document.getElementById("overlay"))closeModal();}
