@@ -1,11 +1,12 @@
-from flask import Flask, jsonify, request, send_file, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory, render_template
 import os, csv, json
 
 app = Flask(__name__)
 
-IMAGE_ROOT   = "."
-DATA_FILE    = "facecard.csv"
-MET_FILE     = "met_status.json"   # 儲存已 meeting 的人
+BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "facecard.csv")
+IMAGE_ROOT = BASE_DIR
+MET_FILE  = os.path.join(BASE_DIR, "met_status.json")
 
 people_data = {}
 
@@ -58,7 +59,7 @@ load_people_data()
 
 @app.route("/")
 def index():
-    return send_file("index.html")
+    return render_template("Index.html")
 
 @app.route("/get_folders")
 def get_folders():
@@ -122,7 +123,7 @@ def toggle_met():
 
 @app.route("/<path:path>")
 def serve_file(path):
-    return send_from_directory(".", path)
+    return send_from_directory(BASE_DIR, path)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port=5000)
